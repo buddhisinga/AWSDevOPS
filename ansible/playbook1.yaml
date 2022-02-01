@@ -1,0 +1,30 @@
+---
+- name: Create a new Demo EC2 instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+      region: us-west-2
+      instance_type: t2.micro
+      ami: ami-09889d8d54f9e0a0e  
+      keypair: linuxKP 
+
+  tasks:
+
+    - name: Create an ec2 instance
+      ec2:
+         aws_access_key: "{{aws_Key}}"
+         aws_secret_key: "{{aws_Secret_ID}}"
+         key_name: "{{ keypair }}"
+         group: winsg1 
+         instance_type: "{{ instance_type }}"
+         image: "{{ ami }}"
+         wait: true
+         region: "{{ region }}"
+         count: 1  # default
+         count_tag:
+            Name: Demo
+         instance_tags:
+            Name: AnsibleBuildVM1
+      register: ec2
